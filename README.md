@@ -1,0 +1,252 @@
+# GAN Paper Title Generator
+
+This repository implements a Generative Adversarial Network (GAN) for creating synthetic academic paper titles, as described in the accompanying article ["An Article About GANs Because Companies Aren't Hiring Junior Developers"](https://link-to-your-article.com).
+
+## 📑 Table of Contents
+
+- [Introduction](#introduction)
+- [Architecture](#architecture)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Usage](#usage)
+- [How It Works](#how-it-works)
+- [Results](#results)
+- [Ethical Considerations](#ethical-considerations)
+- [Limitations](#limitations)
+- [Contributing](#contributing)
+- [License](#license)
+
+## 🌟 Introduction
+
+This project demonstrates how GANs can be used for text generation, specifically academic paper titles related to GAN research. It implements the "Gene and Dee" analogy from the accompanying article - where two neural networks compete against each other:
+
+- **Gene (Generator)**: Creates fake paper titles from random noise
+- **Dee (Discriminator)**: Tries to distinguish between real and fake paper titles
+
+Through this adversarial process, the Generator learns to create increasingly convincing academic paper titles.
+
+## 🏗️ Architecture
+
+The GAN architecture consists of two core components - the Generator and Discriminator networks - that work in tandem:
+
+```mermaid
+graph TD
+    A[Random Noise] -->|Input| B[Generator Network]
+    B -->|Fake Paper Titles| C{Discriminator Network}
+    D[Real Paper Titles] -->|Training Data| C
+    C -->|Feedback| B
+    C -->|"Classification (Real/Fake)"| E[Loss Function]
+    E -->|Training Signal| C
+    E -->|Adversarial Signal| B
+    
+    subgraph Generator
+        B1[Linear Layers]
+        B2[LSTM Layers]
+        B3[Attention Mechanism]
+        B4[Output Layer]
+        B1 --> B2 --> B3 --> B4
+    end
+    
+    subgraph Discriminator
+        C1[Embedding Layer]
+        C2[Bidirectional LSTM]
+        C3[Attention Mechanism]
+        C4[Classification Layer]
+        C1 --> C2 --> C3 --> C4
+    end
+```
+
+### Network Details
+
+Both networks utilize RNN architectures (specifically LSTMs) with attention mechanisms:
+
+1. **Generator**:
+   - Processes random noise through fully connected layers
+   - Transforms into sequence embeddings via multi-layer LSTM
+   - Applies attention mechanism to focus on important token positions
+   - Maps to vocabulary distribution through linear projection
+
+2. **Discriminator**:
+   - Embeds input tokens into continuous vector representations
+   - Processes via bidirectional LSTM to capture contextual relationships
+   - Uses attention to weight important features
+   - Outputs a probability indicating whether the input is real or fake
+
+## 📋 Requirements
+
+- Python 3.8+
+- PyTorch 1.8+
+- NLTK
+- Pandas
+- Beautiful Soup 4
+- Matplotlib
+- tqdm
+- scikit-learn
+
+## 💻 Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/gan-paper-title-generator.git
+cd gan-paper-title-generator
+
+# Create a virtual environment (optional but recommended)
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Download required NLTK data
+python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords')"
+```
+
+## 🚀 Usage
+
+### Training the GAN
+
+To train the model from scratch:
+
+```bash
+python train.py
+```
+
+This will:
+1. Scrape ArXiv for paper titles related to GANs (limited to 100 for ethical considerations)
+2. Process and prepare the data
+3. Train both networks in an adversarial setup
+4. Generate synthetic paper titles
+5. Save the trained models and results
+
+### Generating Synthetic Titles
+
+If you already have trained models and want to generate new titles:
+
+```bash
+python generate.py --num 50 --temperature 0.8
+```
+
+Parameters:
+- `--num`: Number of titles to generate (default: 50)
+- `--temperature`: Controls randomness in generation (default: 0.8)
+  - Lower values (e.g., 0.5) produce more conservative/predictable titles
+  - Higher values (e.g., 1.0) produce more diverse but potentially less coherent titles
+
+## 🧠 How It Works
+
+The training process follows this workflow:
+
+```mermaid
+sequenceDiagram
+    participant Scraper
+    participant DataProcessor
+    participant Generator
+    participant Discriminator
+    participant Evaluator
+
+    Scraper->>DataProcessor: Fetch ArXiv paper titles
+    DataProcessor->>DataProcessor: Preprocess text
+    DataProcessor->>DataProcessor: Build vocabulary
+    DataProcessor->>DataProcessor: Create sequences
+    
+    loop For each epoch
+        loop For each batch
+            Generator->>Generator: Create fake titles from noise
+            Discriminator->>Discriminator: Evaluate real titles
+            Discriminator->>Discriminator: Evaluate fake titles
+            Discriminator->>Discriminator: Update parameters
+            Generator->>Generator: Generate new fake titles
+            Discriminator->>Generator: Provide feedback
+            Generator->>Generator: Update parameters
+        end
+        Evaluator->>Evaluator: Measure generation quality
+        Evaluator->>Evaluator: Track metrics
+        Evaluator->>Evaluator: Sample outputs
+    end
+    
+    Generator->>Evaluator: Generate final set of titles
+    Evaluator->>Evaluator: Save results
+```
+
+### Key Components
+
+1. **Data Collection**: Ethically scrapes limited data from ArXiv using appropriate rate limiting
+2. **Text Processing**: Tokenizes and prepares text for numerical representation
+3. **Vocabulary Building**: Creates a mapping between words and indices
+4. **GAN Training**: Implements the adversarial training loop with temperature sampling
+5. **Evaluation**: Tracks multiple metrics to assess generation quality
+
+## 📊 Results
+
+The model generates paper titles such as:
+
+- "exploring absorption in generalization models with high-fidelity"
+- "deep deterministic study of adversarial diffusion-based segmentation"
+- "next-generation optimization for high-resolution image-to-image translation"
+- "novel efficient enhancement with uncertainty-guided predictions"
+
+Training progress is visualized through metrics:
+
+```mermaid
+gantt
+    title GAN Training Progress (Conceptual)
+    dateFormat X
+    axisFormat %s
+    
+    section Generator Loss
+    High Loss            :0, 5
+    Medium Loss          :5, 10
+    Low Loss             :10, 15
+    
+    section Discriminator Loss
+    Low Loss             :0, 3
+    Medium Loss          :3, 8
+    High Loss            :8, 10
+    Medium Loss          :10, 15
+    
+    section BLEU Score
+    Very Low             :0, 3
+    Low                  :3, 8
+    Medium               :8, 12
+    High                 :12, 15
+    
+    section Title Uniqueness
+    Medium               :0, 5
+    High                 :5, 15
+```
+
+Real metrics and samples can be found in the `/results` directory after training.
+
+## 🔍 Ethical Considerations
+
+This project incorporates several ethical considerations:
+
+1. **Data Collection**: Uses minimal scraping with appropriate rate limiting and respects ArXiv's servers
+2. **Synthetic Data**: Generates artificial examples rather than copying existing work
+3. **Transparency**: Code and method fully documented to ensure understanding of how titles are generated
+4. **Use Case**: Focuses on academic title generation for educational purposes
+
+## 🚧 Limitations
+
+- Limited training data (100 titles) restricts the diversity of outputs
+- Some generated titles may lack semantic coherence despite grammatical correctness
+- GAN training instability can sometimes produce lower quality results
+- The text-based GAN approach has been largely superseded by transformer models for most NLP tasks
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+*This implementation accompanies the article "An Article About GANs Because Companies Aren't Hiring Junior Developers". If you found it helpful, consider connecting on [LinkedIn](https://linkedin.com/in/yourprofile).*
