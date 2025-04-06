@@ -1,6 +1,6 @@
 # GAN Paper Title Generator
 
-This repository implements a Generative Adversarial Network (GAN) for creating synthetic academic paper titles, as described in the accompanying article ["An Article About GANs Because Companies Aren't Hiring Junior Developers"](https://link-to-your-article.com).
+This repository implements a Generative Adversarial Network (GAN) for creating synthetic academic paper titles, as described in the accompanying article ["An Article About GANs Because Companies Aren't Hiring Junior Developers"](https://ibzie.medium.com/an-article-about-gans-because-companies-arent-hiring-junior-developers-b54862e24b8c).
 
 ## 📑 Table of Contents
 
@@ -87,7 +87,7 @@ Both networks utilize LSTM Architectures with attention mechanisms:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/generative-adversarial-networks.git
+git clone https://github.com/Ibzie/GAN-Based-Paper-Title-Generator.git
 cd generative-adversarial-networks
 
 # Create a virtual environment (optional but recommended)
@@ -152,6 +152,7 @@ sequenceDiagram
 ```
 
 ## 📁 Project Structure
+You should get files like these after running this script
 
 ```
 GENERATIVE-ADVERSARIAL-NETWORKS/
@@ -159,6 +160,7 @@ GENERATIVE-ADVERSARIAL-NETWORKS/
 ├── arxiv_title_generator.pth       # Saved generator model
 ├── main.py                         # Main script to run the GAN
 ├── README.md                       # This documentation
+├── requirements.txt                # Kind of need these to run the file
 └── synthetic_arxiv_titles.csv      # Generated paper titles
 ```
 
