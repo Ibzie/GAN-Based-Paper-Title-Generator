@@ -10,7 +10,7 @@ This repository implements a Generative Adversarial Network (GAN) for creating s
 - [Installation](#installation)
 - [Usage](#usage)
 - [How It Works](#how-it-works)
-- [Results](#results)
+- [Project Structure](#project-structure)
 - [Ethical Considerations](#ethical-considerations)
 - [Limitations](#limitations)
 - [Contributing](#contributing)
@@ -58,7 +58,7 @@ graph TD
 
 ### Network Details
 
-Both networks utilize RNN architectures (specifically LSTMs) with attention mechanisms:
+Both networks utilize LSTM Architectures with attention mechanisms:
 
 1. **Generator**:
    - Processes random noise through fully connected layers
@@ -87,8 +87,8 @@ Both networks utilize RNN architectures (specifically LSTMs) with attention mech
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/gan-paper-title-generator.git
-cd gan-paper-title-generator
+git clone https://github.com/yourusername/generative-adversarial-networks.git
+cd generative-adversarial-networks
 
 # Create a virtual environment (optional but recommended)
 python -m venv venv
@@ -103,34 +103,22 @@ python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords')"
 
 ## 🚀 Usage
 
-### Training the GAN
+### Running the Model
 
-To train the model from scratch:
+To run the model:
 
 ```bash
-python train.py
+python main.py
 ```
 
 This will:
 1. Scrape ArXiv for paper titles related to GANs (limited to 100 for ethical considerations)
 2. Process and prepare the data
-3. Train both networks in an adversarial setup
+3. Demonstrate the GAN architecture
 4. Generate synthetic paper titles
-5. Save the trained models and results
+5. Save the model files and synthetic titles
 
-### Generating Synthetic Titles
-
-If you already have trained models and want to generate new titles:
-
-```bash
-python generate.py --num 50 --temperature 0.8
-```
-
-Parameters:
-- `--num`: Number of titles to generate (default: 50)
-- `--temperature`: Controls randomness in generation (default: 0.8)
-  - Lower values (e.g., 0.5) produce more conservative/predictable titles
-  - Higher values (e.g., 1.0) produce more diverse but potentially less coherent titles
+Note: This implementation is designed to showcase GAN architecture and functionality rather than achieve state-of-the-art results. It runs in about 10 seconds and is meant for educational purposes.
 
 ## 🧠 How It Works
 
@@ -149,73 +137,30 @@ sequenceDiagram
     DataProcessor->>DataProcessor: Build vocabulary
     DataProcessor->>DataProcessor: Create sequences
     
-    loop For each epoch
-        loop For each batch
-            Generator->>Generator: Create fake titles from noise
-            Discriminator->>Discriminator: Evaluate real titles
-            Discriminator->>Discriminator: Evaluate fake titles
-            Discriminator->>Discriminator: Update parameters
-            Generator->>Generator: Generate new fake titles
-            Discriminator->>Generator: Provide feedback
-            Generator->>Generator: Update parameters
-        end
-        Evaluator->>Evaluator: Measure generation quality
-        Evaluator->>Evaluator: Track metrics
-        Evaluator->>Evaluator: Sample outputs
+    loop For each batch
+        Generator->>Generator: Create fake titles from noise
+        Discriminator->>Discriminator: Evaluate real titles
+        Discriminator->>Discriminator: Evaluate fake titles
+        Discriminator->>Discriminator: Update parameters
+        Generator->>Generator: Generate new fake titles
+        Discriminator->>Generator: Provide feedback
+        Generator->>Generator: Update parameters
     end
     
     Generator->>Evaluator: Generate final set of titles
     Evaluator->>Evaluator: Save results
 ```
 
-### Key Components
+## 📁 Project Structure
 
-1. **Data Collection**: Ethically scrapes limited data from ArXiv using appropriate rate limiting
-2. **Text Processing**: Tokenizes and prepares text for numerical representation
-3. **Vocabulary Building**: Creates a mapping between words and indices
-4. **GAN Training**: Implements the adversarial training loop with temperature sampling
-5. **Evaluation**: Tracks multiple metrics to assess generation quality
-
-## 📊 Results
-
-The model generates paper titles such as:
-
-- "exploring absorption in generalization models with high-fidelity"
-- "deep deterministic study of adversarial diffusion-based segmentation"
-- "next-generation optimization for high-resolution image-to-image translation"
-- "novel efficient enhancement with uncertainty-guided predictions"
-
-Training progress is visualized through metrics:
-
-```mermaid
-gantt
-    title GAN Training Progress (Conceptual)
-    dateFormat X
-    axisFormat %s
-    
-    section Generator Loss
-    High Loss            :0, 5
-    Medium Loss          :5, 10
-    Low Loss             :10, 15
-    
-    section Discriminator Loss
-    Low Loss             :0, 3
-    Medium Loss          :3, 8
-    High Loss            :8, 10
-    Medium Loss          :10, 15
-    
-    section BLEU Score
-    Very Low             :0, 3
-    Low                  :3, 8
-    Medium               :8, 12
-    High                 :12, 15
-    
-    section Title Uniqueness
-    Medium               :0, 5
-    High                 :5, 15
 ```
-
-Real metrics and samples can be found in the `/results` directory after training.
+GENERATIVE-ADVERSARIAL-NETWORKS/
+├── arxiv_title_discriminator.pth   # Saved discriminator model
+├── arxiv_title_generator.pth       # Saved generator model
+├── main.py                         # Main script to run the GAN
+├── README.md                       # This documentation
+└── synthetic_arxiv_titles.csv      # Generated paper titles
+```
 
 ## 🔍 Ethical Considerations
 
@@ -232,6 +177,7 @@ This project incorporates several ethical considerations:
 - Some generated titles may lack semantic coherence despite grammatical correctness
 - GAN training instability can sometimes produce lower quality results
 - The text-based GAN approach has been largely superseded by transformer models for most NLP tasks
+- This implementation prioritizes educational clarity over performance
 
 ## 🤝 Contributing
 
@@ -245,8 +191,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License
 
 ---
 
-*This implementation accompanies the article "An Article About GANs Because Companies Aren't Hiring Junior Developers". If you found it helpful, consider connecting on [LinkedIn](https://linkedin.com/in/yourprofile).*
+*This implementation accompanies the article "An Article About GANs Because Companies Aren't Hiring Junior Developers". If you found it helpful, consider connecting on [LinkedIn](https://www.linkedin.com/in/ibrahim-akhtar-ab543823b/).*
